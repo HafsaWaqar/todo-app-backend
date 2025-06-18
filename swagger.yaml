@@ -1,0 +1,344 @@
+openapi: 3.0.0
+info:
+  title: NewApp API
+  version: 1.0.0
+  description: API documentation for User, Task, and Category management
+servers:
+  - url: http://localhost:3000/api
+paths:
+  /users:
+    get:
+      tags: [User]
+      summary: Get all users
+      security:
+        - bearerAuth: []
+      parameters:
+        - in: query
+          name: withTasks
+          schema:
+            type: boolean
+          required: false
+          description: Set to true to include tasks for each user
+      responses:
+        '200':
+          description: List of users
+  /users/register:
+    post:
+      tags: [User]
+      summary: Register a new user
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UserRegister'
+      responses:
+        '201':
+          description: User registered
+  /users/login:
+    post:
+      tags: [User]
+      summary: Login a user
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UserLogin'
+      responses:
+        '200':
+          description: Login successful
+        '401':
+          description: Invalid credentials
+        '404':
+          description: User not found
+  /users/{id}:
+    get:
+      tags: [User]
+      summary: Get user by ID
+      security:
+        - bearerAuth: []
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+        - in: query
+          name: withTasks
+          schema:
+            type: boolean
+          required: false
+          description: Set to true to include tasks for this user
+      responses:
+        '200':
+          description: User found
+        '404':
+          description: User not found
+    put:
+      tags: [User]
+      summary: Update user by ID
+      security:
+        - bearerAuth: []
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/User'
+      responses:
+        '200':
+          description: User updated
+    delete:
+      tags: [User]
+      summary: Delete user by ID
+      security:
+        - bearerAuth: []
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: User deleted
+  /tasks:
+    get:
+      tags: [Task]
+      summary: Get all tasks
+      security:
+        - bearerAuth: []
+      parameters:
+        - in: query
+          name: withCategories
+          schema:
+            type: boolean
+          required: false
+          description: Set to true to include categories for each task
+      responses:
+        '200':
+          description: List of tasks
+    post:
+      tags: [Task]
+      summary: Create a new task
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Task'
+      responses:
+        '201':
+          description: Task created
+  /tasks/{id}:
+    get:
+      tags: [Task]
+      summary: Get task by ID
+      security:
+        - bearerAuth: []
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+        - in: query
+          name: withCategories
+          schema:
+            type: boolean
+          required: false
+          description: Set to true to include categories for this task
+      responses:
+        '200':
+          description: Task found
+        '404':
+          description: Task not found
+    put:
+      tags: [Task]
+      summary: Update task by ID
+      security:
+        - bearerAuth: []
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Task'
+      responses:
+        '200':
+          description: Task updated
+    delete:
+      tags: [Task]
+      summary: Delete task by ID
+      security:
+        - bearerAuth: []
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Task deleted
+  /categories:
+    get:
+      tags: [Category]
+      summary: Get all categories
+      security:
+        - bearerAuth: []
+      parameters:
+        - in: query
+          name: withTasks
+          schema:
+            type: boolean
+          required: false
+          description: Set to true to include tasks for each category
+      responses:
+        '200':
+          description: List of categories
+    post:
+      tags: [Category]
+      summary: Create a new category
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Category'
+      responses:
+        '201':
+          description: Category created
+  /categories/{id}:
+    get:
+      tags: [Category]
+      summary: Get category by ID
+      security:
+        - bearerAuth: []
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+        - in: query
+          name: withTasks
+          schema:
+            type: boolean
+          required: false
+          description: Set to true to include tasks for this category
+      responses:
+        '200':
+          description: Category found
+        '404':
+          description: Category not found
+    put:
+      tags: [Category]
+      summary: Update category by ID
+      security:
+        - bearerAuth: []
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Category'
+      responses:
+        '200':
+          description: Category updated
+    delete:
+      tags: [Category]
+      summary: Delete category by ID
+      security:
+        - bearerAuth: []
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Category deleted
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+  schemas:
+    User:
+      type: object
+      properties:
+        name:
+          type: string
+        password:
+          type: string
+        role:
+          type: string
+          enum: [admin, user]
+    UserRegister:
+      type: object
+      required: [name, password]
+      properties:
+        name:
+          type: string
+        password:
+          type: string
+        role:
+          type: string
+          enum: [admin, user]
+    UserLogin:
+      type: object
+      required: [name, password]
+      properties:
+        name:
+          type: string
+        password:
+          type: string
+    Task:
+      type: object
+      properties:
+        name:
+          type: string
+        status:
+          type: string
+          enum: [pending, completed, in-progress]
+        userId:
+          type: integer
+        categories:
+          type: array
+          items:
+            type: integer
+    Category:
+      type: object
+      properties:
+        name:
+          type: string
+        tasks:
+          type: array
+          items:
+            type: integer
